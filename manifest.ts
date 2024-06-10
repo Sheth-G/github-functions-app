@@ -2,11 +2,17 @@ import { Manifest } from "deno-slack-sdk/mod.ts";
 import CreateIssueDefinition from "./functions/create_issue/definition.ts";
 import CreateNewIssueWorkflow from "./workflows/create_new_issue.ts";
 import { FetchThreadDefinition } from "./functions/fetch_thread.ts";
+import { PostIssueUpdateFunction } from "./functions/post_issue_update.ts"; // Import the new custom function
+
 export default Manifest({
   name: "Workflows for GitHub",
   description: "Bringing oft-used GitHub functionality into Slack",
   icon: "assets/icon.png",
-  functions: [CreateIssueDefinition, FetchThreadDefinition],
+  functions: [
+    CreateIssueDefinition,
+    FetchThreadDefinition,
+    PostIssueUpdateFunction,
+  ],
   workflows: [CreateNewIssueWorkflow],
   // If your organizaiton uses a separate Github enterprise domain, add that domain to this list
   // so that functions can make API calls to it.
@@ -14,6 +20,7 @@ export default Manifest({
     "api.github.com",
     "app.dev.enterprisegpt.com",
     "torvalds-dev-nl-ghco-nl-ghcos-projects.vercel.app",
+    "torvalds.dev",
   ],
   botScopes: [
     "commands",

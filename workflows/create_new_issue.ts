@@ -1,9 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateIssueDefinition } from "../functions/create_issue.ts";
-import { SlackFunction } from "deno-slack-sdk/mod.ts";
-import fetchThread, {
-  FetchThreadDefinition,
-} from "../functions/fetch_thread.ts"; // Ensure correct import
+import { FetchThreadDefinition } from "../functions/fetch_thread.ts"; // Ensure correct import
+import { PostIssueUpdateFunction } from "../functions/post_issue_update.ts"; // Import the new custom function
 
 /**
  * A workflow is a set of steps that are executed in order. Each step in a
@@ -63,6 +61,7 @@ const issueFormData = CreateNewIssueWorkflow.addStep(
         title: "Issue title",
         type: Schema.types.string,
         default: fetchThreadStep.outputs.iss_title,
+        long: true,
       }, {
         name: "description",
         title: "Issue description",
@@ -106,11 +105,20 @@ const issue = CreateNewIssueWorkflow.addStep(CreateIssueDefinition, {
  * Messages can be sent into a channel with the built-in SendMessage function.
  * Learn more: https://api.slack.com/automation/functions#catalog
  */
-CreateNewIssueWorkflow.addStep(Schema.slack.functions.SendMessage, {
+// CreateNewIssueWorkflow.addStep(Schema.slack.functions.SendMessage, {
+//   channel_id: CreateNewIssueWorkflow.inputs.channel,
+//   thread_ts: CreateNewIssueWorkflow.inputs.message_ts,
+
+//   message:
+//     `Issue #${issue.outputs.GitHubIssueNumber} has been successfully created\n` +
+//     `Link to issue: ${issue.outputs.GitHubIssueLink}`,
+// });
+
+CreateNewIssueWorkflow.addStep(PostIssueUpdateFunction, {
   channel_id: CreateNewIssueWorkflow.inputs.channel,
-  message:
-    `Issue #${issue.outputs.GitHubIssueNumber} has been successfully created\n` +
-    `Link to issue: ${issue.outputs.GitHubIssueLink}`,
+  thread_ts: CreateNewIssueWorkflow.inputs.message_ts,
+  issue_number: issue.outputs.GitHubIssueNumber,
+  issue_link: issue.outputs.GitHubIssueLink,
 });
 
 export default CreateNewIssueWorkflow;

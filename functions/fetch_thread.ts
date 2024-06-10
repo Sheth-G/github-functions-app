@@ -60,22 +60,25 @@ export default SlackFunction(
       }
 
       const message = messageResult.messages[0];
-      thread_ts = message.thread_ts || thread_ts; // Use thread_ts if it exists, else use message_ts
+      // thread_ts = message.thread_ts || thread_ts; // Use thread_ts if it exists, else use message_ts
 
-      // Fetch all messages in the thread from the Slack API
-      const threadResult = await client.conversations.replies({
-        channel: channel,
-        ts: thread_ts,
-      });
+      // // Fetch all messages in the thread from the Slack API
+      // const threadResult = await client.conversations.replies({
+      //   channel: channel,
+      //   ts: thread_ts,
+      // });
 
-      if (!threadResult.ok) {
-        throw new Error(`Failed to fetch thread: ${threadResult.error}`);
-      }
+      // if (!threadResult.ok) {
+      //   throw new Error(`Failed to fetch thread: ${threadResult.error}`);
+      // }
 
-      const messages = threadResult.messages || [];
+      // const messages = threadResult.messages || [];
       // Concatenate all messages in the thread into a single string
-      const threadText = messages.map((msg) => msg.text).join(" \n");
+      // messages.pop(); // Remove the last message
 
+      // const threadText = messages.map((msg) => msg.text).join(" . ");
+
+      const threadText = message.text;
       const teamResult = await client.team.info();
 
       if (!teamResult.ok) {
@@ -85,15 +88,15 @@ export default SlackFunction(
       const team_id = teamResult.team.id;
 
       const response = await fetch(
-        "https://app.dev.enterprisegpt.com/api/populate_github_title_and_description",
+        "https://torvalds.dev/api/populate_github_title_and_description",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            channel_id: "C06C78R8KGW",
-            team_id: "T06C5EYC0BF",
+            channel_id: "C06EEUJTNGJ",
+            team_id: "T06E4RAA0M8",
             user_query: threadText,
           }),
         },
@@ -110,14 +113,21 @@ export default SlackFunction(
       return {
         outputs: {
           thread: threadText,
-          interactivity: interactivity,
+          interactivity: inputs.interactivity,
           iss_title: apiResponse.title,
           iss_desc: apiResponse.description,
         },
       };
     } catch (error) {
       console.error("Error fetching thread:", error);
-      return { error: `Error fetching thread: ${error.message}` };
+      return {
+        outputs: {
+          thread: "",
+          interactivity: inputs.interactivity,
+          iss_title: "",
+          iss_desc: "",
+        },
+      };
     }
   },
 );

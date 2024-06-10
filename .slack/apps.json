@@ -1,1 +1,17 @@
-{}
+{
+  "apps": {
+    "T065K5Z2P": {
+      "app_id": "A075TGE7223",
+      "IsDev": false,
+      "team_domain": "aaspaas",
+      "team_id": "T065K5Z2P"
+    },
+    "T077DMV0M6D": {
+      "app_id": "A0773UQGDLL",
+      "IsDev": false,
+      "team_domain": "torvaldsdevworkspace",
+      "team_id": "T077DMV0M6D"
+    }
+  },
+  "default": "aaspaas"
+}
