@@ -49,6 +49,7 @@ export default SlackFunction(
       thread_ts: thread_ts,
       text:
         `Issue #${issue_number} has been successfully created\nLink to issue: ${issue_link}`,
+      unfurl_links: false,
     });
 
     if (!response.ok) {

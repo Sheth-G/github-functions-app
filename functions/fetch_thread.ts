@@ -88,15 +88,15 @@ export default SlackFunction(
       const team_id = teamResult.team.id;
 
       const response = await fetch(
-        "https://torvalds.dev/api/populate_github_title_and_description",
+        "https://app.dev.enterprisegpt.com/api/populate_github_title_and_description",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            channel_id: "C06EEUJTNGJ",
-            team_id: "T06E4RAA0M8",
+            channel_id: "C06C78R8KGW",
+            team_id: "T06C5EYC0BF",
             user_query: threadText,
           }),
         },
